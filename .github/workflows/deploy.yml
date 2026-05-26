@@ -1,0 +1,42 @@
+name: Django CI-CD Pipeline
+
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. GitHub ke server par apna code lekar aana
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # 2. Python environment set karna
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-node: '3.10'
+
+    # 3. Docker aur Docker Compose install karna GitHub runner par
+    - name: Install Docker Compose
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose
+
+    # 4. Docker container ko build aur up karke check karna ki sab chal raha hai ya nahi
+    - name: Build and Run Docker Containers
+      run: |
+        docker-compose up --build -d
+        sleep 10  # 10 second rukenge taaki database chalu ho jaye
+
+    # 5. Check karna ki containers live hain ya nahi
+    - name: Check running containers
+      run: docker ps
+
+    # 6. Kaam khatam hone ke baad containers ko band karna
+    - name: Down Containers
+      run: docker-compose down
