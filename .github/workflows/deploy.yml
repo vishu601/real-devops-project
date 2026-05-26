@@ -26,7 +26,8 @@ jobs:
 
     - name: Build and Run Docker Containers
       run: |
-        docker-compose up --build -d
+        docker-compose build --no-cache
+        docker-compose up -d
         sleep 10
 
     - name: Check running containers
