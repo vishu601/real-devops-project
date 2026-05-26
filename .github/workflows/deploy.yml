@@ -11,32 +11,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. GitHub ke server par apna code lekar aana (Updated to v4)
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # 2. Python environment set karna (Fixed: changed python-node to python-version, and updated to v5)
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.10'
 
-    # 3. Docker aur Docker Compose install karna GitHub runner par
     - name: Install Docker Compose
       run: |
         sudo apt-get update
         sudo apt-get install -y docker-compose
 
-    # 4. Docker container ko build aur up karke check karna ki sab chal raha hai ya nahi
     - name: Build and Run Docker Containers
       run: |
         docker-compose up --build -d
-        sleep 10  # 10 second rukenge taaki database chalu ho jaye
+        sleep 10
 
-    # 5. Check karna ki containers live hain ya nahi
     - name: Check running containers
       run: docker ps
 
-    # 6. Kaam khatam hone ke baad containers ko band karna
     - name: Down Containers
       run: docker-compose down
