@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=bootcamp
+      - POSTGRES_USER=bootcamp_user
+      - POSTGRES_PASSWORD=bootcamp_pass
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgres://bootcamp_user:bootcamp_pass@db:5432/bootcamp
+      - DEBUG=True
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
